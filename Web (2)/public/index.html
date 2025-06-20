@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เว็บสุ่มของขวัญ 🎁</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .main-section {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            border-radius: 15px;
+            color: white;
+        }
+
+        #generateBtn {
+            background: linear-gradient(45deg, #00d2ff, #3a7bd5);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        #generateBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        #result {
+            font-size: 1.3em;
+            font-weight: bold;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .management-section {
+            margin-top: 40px;
+        }
+
+        .section-title {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        input, select, button {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-success {
+            background: #27ae60;
+        }
+
+        .btn-success:hover {
+            background: #219a52;
+        }
+
+        .gifts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .gift-card {
+            background: white;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .gift-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .gift-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .gift-details {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .gift-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .gift-actions button {
+            flex: 1;
+            padding: 8px;
+            font-size: 0.9em;
+        }
+
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .error {
+            color: #e74c3c;
+            background: #ffeaea;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .success {
+            color: #27ae60;
+            background: #eafaf1;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        @media (max-width: 768px) {
+            .form-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .gifts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎁 เว็บจัดการของขวัญ 🎁</h1>
+        
+        <!-- ส่วนสุ่มของขวัญ -->
+        <div class="main-section">
+            <button id="generateBtn">🎲 กดเพื่อสุ่มของขวัญ</button>
+            <div id="result">ของขวัญจะปรากฏที่นี่</div>
+        </div>
+
+        <!-- ส่วนเพิ่มของขวัญใหม่ -->
+        <div class="management-section">
+            <h2 class="section-title">➕ เพิ่มของขวัญใหม่</h2>
+            <div class="form-group">
+                <input type="text" id="newGiftName" placeholder="ชื่อของขวัญ" required>
+                <input type="text" id="newGiftCategory" placeholder="หมวดหมู่" required>
+                <input type="number" id="newGiftPrice" placeholder="ราคา (บาท)" min="0" required>
+                <button class="btn btn-success" onclick="addGift()">เพิ่มของขวัญ</button>
+            </div>
+        </div>
+
+        <!-- ส่วนแสดงรายการของขวัญ -->
+        <div class="management-section">
+            <h2 class="section-title">📋 รายการของขวัญทั้งหมด</h2>
+            <button class="btn" onclick="loadGifts()">🔄 รีเฟรชรายการ</button>
+            <div id="message"></div>
+            <div id="giftsContainer" class="gifts-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api/gifts';
+        let editingGiftId = null;
+
+        // โหลดข้อมูลของขวัญเมื่อเริ่มต้น
+        document.addEventListener('DOMContentLoaded', () => {
+            loadGifts();
+        });
+
+        // ฟังก์ชันแสดงข้อความ
+        function showMessage(message, type = 'success') {
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerHTML = `<div class="${type}">${message}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 3000);
+        }
+
+        // ฟังก์ชันสุ่มของขวัญ
+        document.getElementById('generateBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('generateBtn');
+            const result = document.getElementById('result');
+            
+            btn.disabled = true;
+            btn.textContent = '🎲 กำลังสุ่ม...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/random/pick`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    result.innerHTML = `
+                        <div>
+                            🎁 <strong>${data.data.name}</strong><br>
+                            <small>หมวดหมู่: ${data.data.category} | ราคา: ${data.data.price} บาท</small>
+                        </div>
+                    `;
+                } else {
+                    result.textContent = 'เกิดข้อผิดพลาดในการสุ่มของขวัญ';
+                }
+            } catch (error) {
+                result.textContent = 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้';
+                console.error('Error:', error);
+            }
+            
+            btn.disabled = false;
+            btn.textContent = '🎲 กดเพื่อสุ่มของขวัญ';
+        });
+
+        // ฟังก์ชันโหลดรายการของขวัญ
+        async function loadGifts() {
+            const container = document.getElementById('giftsContainer');
+            container.innerHTML = '<div class="loading">กำลังโหลด...</div>';
+            
+            try {
+                const response = await fetch(API_BASE);
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayGifts(data.data);
+                } else {
+                    container.innerHTML = '<div class="error">ไม่สามารถโหลดข้อมูลได้</div>';
+                }
+            } catch (error) {
+                container.innerHTML = '<div class="error">เกิดข้อผิดพลาดในการเชื่อมต่อ</div>';
+                console.error('Error:', error);
+            }
+        }
+
+        // ฟังก์ชันแสดงรายการของขวัญ
+        function displayGifts(gifts) {
+            const container = document.getElementById('giftsContainer');
+            
+            if (gifts.length === 0) {
+                container.innerHTML = '<div class="error">ไม่มีของขวัญในระบบ</div>';
+                return;
+            }
+            
+            container.innerHTML = gifts.map(gift => `
+                <div class="gift-card">
+                    <div class="gift-name">${gift.name}</div>
+                    <div class="gift-details">
+                        <div>หมวดหมู่: ${gift.category}</div>
+                        <div>ราคา: ${gift.price} บาท</div>
+                        <div>ID: ${gift.id}</div>
+                    </div>
+                    <div class="gift-actions">
+                        <button class="btn" onclick="editGift(${gift.id}, '${gift.name}', '${gift.category}', ${gift.price})">
+                            ✏️ แก้ไข
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteGift(${gift.id}, '${gift.name}')">
+                            🗑️ ลบ
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ฟังก์ชันเพิ่มของขวัญใหม่
+        async function addGift() {
+            const name = document.getElementById('newGiftName').value.trim();
+            const category = document.getElementById('newGiftCategory').value.trim();
+            const price = parseFloat(document.getElementById('newGiftPrice').value);
+            
+            if (!name || !category || isNaN(price) || price < 0) {
+                showMessage('กรุณากรอกข้อมูลให้ครบถ้วนและถูกต้อง', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(API_BASE, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name, category, price })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage('เพิ่มของขวัญสำเร็จ!');
+                    document.getElementById('newGiftName').value = '';
+                    document.getElementById('newGiftCategory').value = '';
+                    document.getElementById('newGiftPrice').value = '';
+                    loadGifts();
+                } else {
+                    showMessage(data.message, 'error');
+                }
+            } catch (error) {
+                showMessage('เกิดข้อผิดพลาดในการเพิ่มของขวัญ', 'error');
+                console.error('Error:', error);
+            }
+        }
+
+        // ฟังก์ชันแก้ไขของขวัญ
+        function editGift(id, name, category, price) {
+            document.getElementById('newGiftName').value = name;
+            document.getElementById('newGiftCategory').value = category;
+            document.getElementById('newGiftPrice').value = price;
+            
+            editingGiftId = id;
+            
+            // เปลี่ยนปุ่มเป็นโหมดแก้ไข
+            const addButton = document.querySelector('.btn-success');
+            addButton.textContent = 'อัปเดตของขวัญ';
+            addButton.onclick = updateGift;
+            addButton.className = 'btn';
+            
+            // เพิ่มปุ่มยกเลิก
+            if (!document.getElementById('cancelEdit')) {
+                const cancelBtn = document.createElement('button');
+                cancelBtn.id = 'cancelEdit';
+                cancelBtn.className = 'btn btn-danger';
+                cancelBtn.textContent = 'ยกเลิก';
+                cancelBtn.onclick = cancelEdit;
+                addButton.parentNode.appendChild(cancelBtn);
+            }
+            
+            // เลื่อนไปที่ฟอร์ม
+            document.querySelector('.management-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ฟังก์ชันอัปเดตของขวัญ
+        async function updateGift() {
+            const name = document.getElementById('newGiftName').value.trim();
+            const category = document.getElementById('newGiftCategory').value.trim();
+            const price = parseFloat(document.getElementById('newGiftPrice').value);
+            
+            if (!name || !category || isNaN(price) || price < 0) {
+                showMessage('กรุณากรอกข้อมูลให้ครบถ้วนและถูกต้อง', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/${editingGiftId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name, category, price })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage('อัปเดตของขวัญสำเร็จ!');
+                    cancelEdit();
+                    loadGifts();
+                } else {
+                    showMessage(data.message, 'error');
+                }
+            } catch (error) {
+                showMessage('เกิดข้อผิดพลาดในการอัปเดตของขวัญ', 'error');
+                console.error('Error:', error);
+            }
+        }
+
+        // ฟังก์ชันยกเลิกการแก้ไข
+        function cancelEdit() {
+            editingGiftId = null;
+            document.getElementById('newGiftName').value = '';
+            document.getElementById('newGiftCategory').value = '';
+            document.getElementById('newGiftPrice').value = '';
+            
+            const addButton = document.querySelector('.management-section .btn');
+            addButton.textContent = 'เพิ่มของขวัญ';
+            addButton.onclick = addGift;
+            addButton.className = 'btn btn-success';
+            
+            const cancelBtn = document.getElementById('cancelEdit');
+            if (cancelBtn) {
+                cancelBtn.remove();
+            }
+        }
+
+        // ฟังก์ชันลบของขวัญ
+        async function deleteGift(id, name) {
+            if (!confirm(`คุณต้องการลบของขวัญ "${name}" หรือไม่?`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage('ลบของขวัญสำเร็จ!');
+                    loadGifts();
+                } else {
+                    showMessage(data.message, 'error');
+                }
+            } catch (error) {
+                showMessage('เกิดข้อผิดพลาดในการลบของขวัญ', 'error');
+                console.error('Error:', error);
+            }
+        }
+
+        // Event listener สำหรับ Enter key ในฟอร์ม
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const target = e.target;
+                if (target.id === 'newGiftName' || target.id === 'newGiftCategory' || target.id === 'newGiftPrice') {
+                    if (editingGiftId) {
+                        updateGift();
+                    } else {
+                        addGift();
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
