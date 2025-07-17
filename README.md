@@ -1,14 +1,10 @@
-# Font-End by Ratchanon Semsayan
+# Font-End by chisanuphong treeboonpluk
 การใช้งาน Font-End
 ```
-cd client/my-app
-npm install
-npm run dev
+เพิ่มชื่อของขวัญ หมวดหมู่ และ ราคา (บาท)
 ```
-# Back-End by Pattamaraj Booranawanich 
+# Back-End by Siwat Chinchaiya
 การใช้งาน Back-End
 ```
-cd server
-npm install
 node server.js
 ```
